@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head >
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <style>
+    .card{
+      background-color: rgba(27, 37, 56,.4);
+      color: white;
+    }
+
+  </style>
+    <script>
+      function get(zoone){
+        var url="http://localhost:8080/SightAPI?zone=";
+        if(zoone==1){
+          url+="七堵";
+        }
+        if(zoone==2){
+          url+="仁愛";
+        }
+        if(zoone==3){
+          url+="中正";
+        }
+        if(zoone==4){
+          url+="中山";
+        }
+        if(zoone==5){
+          url+="安樂";
+        }
+        if(zoone==6){
+          url+="暖暖";
+        }
+        if(zoone==7){
+          url+="信義";
+        }
+        console.log(url);
+        var options=document.getElementById("row");
+        while (options.firstChild) {
+            options.removeChild(options.lastChild);
+        }
+        var loading=document.createElement("img");
+        loading.setAttribute("src","https://i.pinimg.com/originals/a2/dc/96/a2dc9668f2cf170fe3efeb263128b0e7.gif");
+        options.appendChild(loading);
+        fetch(url)
+          .then(function(response) {
+           return response.json();
+        })
+        .then(function(myJson) {
+          console.log(myJson);
+          while (options.firstChild) {
+            options.removeChild(options.lastChild);
+          }
+          var len=0;
+          for(var j in myJson)
+            len++;
+          for(var i=0;i<len;i++){
+            var newdiv=document.createElement("div");//建立card
+            newdiv.className="card col-12 col-md-4";
+            newdiv.style="width:400px";
+             
+            var newdiv2=document.createElement("div");
+            newdiv2.className="card-body";
+
+            var newh4=document.createElement("h4");//風景名稱
+            newh4.className="card-title";
+            newh4.innerHTML=myJson[i].sightName;
+
+            var newp=document.createElement("p");//風景地區
+            newp.className="card-text";
+            newp.innerHTML=myJson[i].zone;
+
+            var newp2=document.createElement("p");//分類
+            newp2.className="card-text";
+            newp2.innerHTML=myJson[i].category;
+
+            var newa=document.createElement("a");//地點
+            newa.href='https://www.google.com.tw/maps/place/'+myJson[i].address;
+            newa.target="_blank"
+            var newbt=document.createElement("button");
+            newbt.className="btn btn-info";
+            newbt.innerHTML=myJson[i].address;
+
+            var newa2=document.createElement("button");//細節
+            newa2.className="btn btn-info";
+            newa2.setAttribute("data-toggle","collapse")
+            newa2.setAttribute("data-target","#demo"+i)
+            newa2.innerHTML="詳細資訊"
+            var newdiv3=document.createElement("div");
+            newdiv3.id="demo"+i;
+            newdiv3.className="collapse";
+            console.log(myJson[i].photoURL);
+            if(myJson[i].photoURL !="noimg"){
+              var newimg=document.createElement("img")
+              
+              newimg.setAttribute("src",myJson[i].photoURL);
+              newimg.setAttribute("width","300");
+              newimg.setAttribute("height","300");
+              
+              newdiv3.appendChild(newimg);
+            }
+            var newpp=document.createElement("p");
+            newpp.innerHTML+=myJson[i].description;
+            newdiv3.appendChild(newpp);
+           
+            newa2.appendChild(newdiv3);
+            newa.appendChild(newbt); 
+            newdiv2.appendChild(newh4);
+            newdiv2.appendChild(newp);
+            newdiv2.appendChild(newp2);
+            newdiv2.appendChild(newa);
+            
+            newdiv2.appendChild(newa2);
+              
+            newdiv.appendChild(newdiv2);
+            options.appendChild(newdiv);
+          }
+          
+        });
+      }    
+    </script>
+</head>
+<body style="
+height: 100vh;
+background-repeat: no-repeat;
+background-position: center;
+background-color: rgba(27, 37, 56);
+background-blend-mode: multiply;
+">
+  <div class="bg-image" >
+    <div class="btn-group" id="bg">
+        <button type="button" class="btn btn-info btn-lg" data-toggle="collapse" data-target="#demo" onclick='get(1)'id="qidu">七堵區</button>
+        <button type="button" class="btn btn-info btn-lg" data-toggle="collapse" data-target="#demo" onclick='get(2)'id="renai">仁愛區</button>      
+        <button type="button" class="btn btn-info btn-lg" data-toggle="collapse" data-target="#demo" onclick='get(3)'id="zhongzheng">中正區</button>      
+        <button type="button" class="btn btn-info btn-lg" data-toggle="collapse" data-target="#demo" onclick='get(4)'id="zhongshan">中山區</button>       
+        <button type="button" class="btn btn-info btn-lg" data-toggle="collapse" data-target="#demo" onclick='get(5)'id="anle">安樂區</button>       
+        <button type="button" class="btn btn-info btn-lg" data-toggle="collapse" data-target="#demo" onclick='get(6)'id="nuannuan">暖暖區</button>       
+        <button type="button" class="btn btn-info btn-lg" data-toggle="collapse" data-target="#demo" onclick='get(7)'id="xinyi">信義區</button>        
+      </div>
+      <div id="demo" class="collapse">
+        <div class="row" id ="row"> 
+        </div>
+      </div>
+    </div>  
+</body>
+</body>
+</html>
